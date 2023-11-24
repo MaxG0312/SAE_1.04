@@ -1,14 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Les collectes</title>
+    <title>Les variétés</title>
 {% endblock %}
 
 {% block body %}
 
-<h3>Collectes</h3>
+<h3>Variétés</h3>
 <br>
-<a href="/Variete/add" class="btn btn-primary add">Ajouter une nouvelle collecte</a>
+<a href="/Variete/add" class="btn btn-primary add">Ajouter une nouvelle variété</a>
 <br>
 <br><br>
   <div class="table-responsive">
@@ -16,23 +16,25 @@
       <thead>
         <tr>
           <th>Id</th>
-          <th>Quantité</th>
-          <th>Produit</th>
-          <th>Date</th>
+          <th>Variété</th>
+          <th>Saison</th>
+          <th>Culture</th>
+            <th>Prix au kg</th>
           <th>Editer</th>
           <th>Supprimer</th>
         </tr>
       </thead>
       <tbody>
-        {% if collecte | length >= 1 %}
-        {% for ligne in collecte %}
+        {% if Variete | length >= 1 %}
+        {% for ligne in Variete %}
         <tr>
-          <td>{{ ligne.id }}</td>
-          <td>{{ ligne.quantite }}</td>
-          <td>{{ ligne.produit }}</td>
-          <td>{{ ligne.date }}</td>
-          <td><a href="/collecte/edit?id={{ ligne.id }}" class="btn btn-primary">Éditer</a></td>
-          <td><a href="/collecte/delete?id={{ ligne.id }}" class="btn btn-primary">Supprimer</a></td>
+          <td>{{ ligne.id_variete }}</td>
+          <td>{{ ligne.libelle_variete }}</td>
+          <td>{{ ligne.saison }}</td>
+          <td>{{ ligne.culture }}</td>
+            <td>{{ ligne.prix_kg }}</td>
+          <td><a href="/Variete/edit?id={{ ligne.id }}" class="btn btn-primary">Éditer</a></td>
+          <td><a href="/Variete/delete?id={{ ligne.id }}" class="btn btn-primary">Supprimer</a></td>
         </tr>
         {% endfor %}
         {% endif %}
