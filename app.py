@@ -62,11 +62,6 @@ def teardown_db(exception):
 
 
 @app.route('/')
-def show_accueil():
-    return render_template('layout.html')
-
-
-@app.route('/')
 def show_layout():
     return render_template('layout.html')
 
