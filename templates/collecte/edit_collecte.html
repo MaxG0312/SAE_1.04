@@ -20,6 +20,14 @@
         <label for="date">Date</label><br>
         <input type="text" name="date" value="{{ collecte.date }}" id="date"><br><br>
         <br>
+        <label for="parcelle_id">Adresse de la parcelle</label><br>
+        <select name="parcelle_id" id="parcelle_id">
+          <option value="{{ collecte.parcelle_id }}" class="current">{{ parcelle[collecte.parcelle_id-1]['adresse'] }}</option>
+          {% for values in parcelle %}
+            <option value="{{ values.id }}">{{ values.adresse }} </option>
+          {%  endfor %}
+        </select>
+        <br>
         <input type="submit" value="Modifier" name="Modifier" id="modifier" >
 
     </fieldset>
