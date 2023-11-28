@@ -19,6 +19,14 @@
         <label for="date">Date</label><br>
         <input id="date" type="text" name="date" value="" placeholder="JJ/MM/AAAA HH:MM:SS"><br>
         <br>
+        <label for="parcelle_id">Parcelle</label><br>
+        <select name="parcelle_id" id="parcelle_id" required>
+            <option value="">Saisir une valeur</option>
+            {% for values in parcelle %}
+                <option value="{{ values.id }}">{{ values.adresse }}</option>
+            {% endfor %}
+        </select>
+        <br>
         <input type="submit" value="Creer" name="Valider" id="modifier">
         <br>
     </fieldset>
