@@ -19,6 +19,7 @@
           <th>Quantité</th>
           <th>Produit</th>
           <th>Date</th>
+          <th>Adresse parcelle</th>
           <th>Editer</th>
           <th>Supprimer</th>
         </tr>
@@ -31,6 +32,7 @@
           <td>{{ ligne.quantite }}</td>
           <td>{{ ligne.produit }}</td>
           <td>{{ ligne.date }}</td>
+          <td>{{ parcelle[ligne.parcelle_id-1]['adresse'] }}</td>
           <td><a href="/collecte/edit?id={{ ligne.id }}" class="btn btn-primary">Éditer</a></td>
           <td><a href="/collecte/delete?id={{ ligne.id }}" class="btn btn-primary">Supprimer</a></td>
         </tr>
@@ -39,4 +41,4 @@
       </tbody>
     </table>
 </div>
-  {% endblock %}0
+{% endblock %}
