@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Modifier une collecte</title>
+{% endblock %}
+
+{% block body %}
+  <h2>Modifier une collecte</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form method="post" action="/collecte/edit">
+    <fieldset>
+        <legend> Modification de la collecte n° {{ collecte.id }} </legend>
+        <input type="hidden" name="id" size="18" value="{{ collecte.id }}" id="id">
+        <label for="quantite">Quantité</label><br>
+        <input type="number" name="quantite" size="18" value="{{ collecte.quantite }}" id="quantite"><br><br>
+        <label for="produit">Produit</label><br>
+        <input type="text" name="produit" value="{{ collecte.produit }}" id="produit"><br><br>
+        <label for="date">Date</label><br>
+        <input type="text" name="date" value="{{ collecte.date }}" id="date"><br><br>
+        <br>
+        <input type="submit" value="Modifier" name="Modifier" id="modifier" >
+
+    </fieldset>
+  </form>
+{% endblock %}
