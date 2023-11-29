@@ -31,7 +31,9 @@ def teardown_db(exception):
 @app.route('/')
 def show_layout():
     return render_template('layout.html')
-    
+
+
+
 @app.route('/variete/show')
 def show_variete():
     mycursor = get_db().cursor()
@@ -104,6 +106,61 @@ def delete_variete():
     message=u'une variété supprimée, id : ' + id_variete
     flash(message, 'alert-warning')
     return redirect('/variete/show')
+
+@app.route('/variete/edit', methods=['GET'])
+def edit_variete():
+    mycursor = get_db().cursor()
+
+    sql = '''
+            SELECT culture.id_culture AS id_culture, culture.libelle_culture AS nom FROM culture;
+            '''
+    mycursor.execute(sql)
+    culture = mycursor.fetchall()
+
+    sql = '''
+        SELECT saison.saison AS saison FROM saison;
+        '''
+    mycursor.execute(sql)
+    saison = mycursor.fetchall()
+
+    id = request.args.get('id', '')
+    sql = '''
+        SELECT variete.id_variete AS id,
+        variete.libelle_variete AS nom,
+        variete.saison AS saison,
+        variete.culture AS culture,
+        variete.prix_kg AS prix,
+        variete.stock AS stock
+        FROM variete, culture
+        WHERE variete.id_variete=%s AND culture.id_culture = variete.culture;
+        '''
+    mycursor.execute(sql, (id))
+    variete = mycursor.fetchone()
+    return render_template('variete/edit_variete.html', variete=variete, culture=culture, saison=saison)
+
+
+
+@app.route('/variete/edit', methods=['POST'])
+def valid_edit_collecte():
+    mycursor = get_db().cursor()
+    id = request.form.get('id', '')
+    nom = request.form.get('nom', '')
+    saison = request.form.get('saison', '')
+    culture = request.form.get('culture', '')
+    prix = request.form.get('prix_kg', '')
+    stock = request.form.get('stock', '')
+    tuple_update = (nom, saison, culture, prix, stock, id)
+    sql = '''
+    UPDATE variete SET libelle_variete = %s, saison = %s, culture = %s,
+     prix_kg = %s, stock = %s WHERE id_variete = %s;'''
+    mycursor.execute(sql, tuple_update)
+    get_db().commit()
+    message = u'Une variété modifiée, id : '+ id + ' | nom : '+ nom + \
+              ' | saison : '+ saison + ' | type_culture : '+ culture + \
+              ' | prix : ' + prix  + ' | stock : ' + stock
+    flash(message, 'alert-success')
+    return redirect('/variete/show')
+
 
 
 @app.route('/collecte/add', methods=['GET'])
