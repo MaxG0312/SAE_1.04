@@ -67,6 +67,30 @@ def add_variete():
     return render_template('variete/add_variete.html', culture=culture, saison=saison)
 
 
+@app.route('/variete/add', methods=['POST'])
+def valid_add_variete():
+    mycursor = get_db().cursor()
+
+    libelle_variete = request.form.get('libelle_variete', '')
+    saison = request.form.get('saison', '')
+    culture = request.form.get('culture', '')
+    prix_kg = request.form.get('prix_kg', '')
+    stock = request.form.get('stock', '')
+    tuple_insert = (libelle_variete, saison, culture, prix_kg, stock)
+
+    sql = '''
+    INSERT INTO variete(libelle_variete, saison, culture, prix_kg, stock)
+    VALUES (%s, %s, %s, %s, %s);
+    '''
+    mycursor.execute(sql, tuple_insert)
+    get_db().commit()
+
+    message = u'Nouvelle variété , nom : '+libelle_variete + ' | saison : ' + saison + \
+              ' | culture : ' + culture+ '| prix/kg : '+ prix_kg + ' | stock : ' + stock
+    flash(message, 'alert-success')
+    return redirect('/variete/show')
+
+
 @app.route('/collecte/add', methods=['GET'])
 def add_collecte():
     return render_template('collecte/add_collecte.html', collecte=collecte, parcelle=parcelle)
