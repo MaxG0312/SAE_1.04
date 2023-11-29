@@ -32,7 +32,29 @@ def teardown_db(exception):
 def show_layout():
     return render_template('layout.html')
 
+@app.route('/ticket/show')
+def show_ticket():
+    pass
 
+@app.route('/ticket/add', methods=['GET'])
+def add_ticket():
+    pass
+
+@app.route('/ticket/add', methods=['POST'])
+def valid_add_ticket():
+    pass
+
+@app.route('/ticket/delete', methods=['GET'])
+def delete_ticket():
+    pass
+
+@app.route('/ticket/edit', methods=['GET'])
+def edit_ticket():
+    pass
+
+@app.route('/ticket/edit', methods=['POST'])
+def valid_edit_ticket():
+    pass
 
 @app.route('/variete/show')
 def show_variete():
