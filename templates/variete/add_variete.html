@@ -25,7 +25,7 @@
         <select name="saison" id="saison" required>
             <option value="">Sélectionner un type de culture</option>
             {% for culture in culture %}
-                 <option value="{{ culture.id_culture }}"> {{ culture.libelle_culture }} </option>
+                 <option value="{{ culture.id_culture }}"> {{ culture.nom }} </option>
             {% endfor %}
         </select><br>
         <label for="prix_kg">Prix au kg</label><br>
