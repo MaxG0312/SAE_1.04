@@ -91,6 +91,21 @@ def valid_add_variete():
     return redirect('/variete/show')
 
 
+@app.route('/variete/delete', methods=['GET'])
+def delete_variete():
+    mycursor = get_db().cursor()
+    id_variete = request.args.get('id', '')
+    tuple_delete = (id_variete)
+    sql = '''
+    DELETE FROM variete WHERE id_variete = %s;
+    '''
+    mycursor.execute(sql, tuple_delete)
+    get_db().commit()
+    message=u'une variété supprimée, id : ' + id_variete
+    flash(message, 'alert-warning')
+    return redirect('/variete/show')
+
+
 @app.route('/collecte/add', methods=['GET'])
 def add_collecte():
     return render_template('collecte/add_collecte.html', collecte=collecte, parcelle=parcelle)
