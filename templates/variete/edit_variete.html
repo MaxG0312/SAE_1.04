@@ -24,7 +24,7 @@
         </select><br>
         <label for="culture">Type culture</label><br>
         <select name="culture" id="culture" required>
-            <option value="{{ variete.culture }}">{{ variete.culture }}</option>
+            <option value="{{ variete.culture }}">{{ culture.nom }}</option>
             {% for culture in culture %}
                  <option value="{{ culture.id_culture }}"> {{ culture.nom }} </option>
             {% endfor %}
