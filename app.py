@@ -39,15 +39,33 @@ def show_variete():
     SELECT variete.id_variete AS id,
     variete.libelle_variete AS nom,
     variete.saison AS saison,
-    variete.culture AS type_culture,
+    culture.libelle_culture AS type_culture,
     variete.prix_kg AS prix,
     variete.stock AS stock
-    FROM variete;
+    FROM variete, culture
+    WHERE culture.id_culture = variete.culture;
     '''
     mycursor.execute(sql)
     variete = mycursor.fetchall()
     print(variete)
     return render_template('variete/show_variete.html', variete=variete)
+
+
+@app.route('/variete/add', methods=['GET'])
+def add_variete():
+    mycursor = get_db().cursor()
+    sql='''
+    SELECT culture.id_culture AS id_culture, culture.libelle_culture AS nom FROM culture;
+    '''
+    mycursor.execute(sql)
+    culture = mycursor.fetchall()
+    sql = '''
+    SELECT saison.saison AS saison FROM saison;
+    '''
+    mycursor.execute(sql)
+    saison = mycursor.fetchall()
+    return render_template('variete/add_variete.html', culture=culture, saison=saison)
+
 
 @app.route('/collecte/add', methods=['GET'])
 def add_collecte():
