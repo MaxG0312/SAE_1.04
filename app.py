@@ -34,7 +34,18 @@ def show_layout():
 
 @app.route('/ticket/show')
 def show_ticket():
-    pass
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT ticket.id_ticket AS id,
+    ticket.description_incident AS description,
+    ticket.date_incident AS date,
+    ticket.statut_incident AS statut,
+    FROM ticket_incident
+    '''
+    mycursor.execute(sql)
+    ticket_incident = mycursor.fetchall()
+    print(ticket_incident)
+    return render_template('ticket/show_tickets.html', ticket_incident=ticket_incident)
 
 @app.route('/ticket/add', methods=['GET'])
 def add_ticket():
@@ -46,7 +57,17 @@ def valid_add_ticket():
 
 @app.route('/ticket/delete', methods=['GET'])
 def delete_ticket():
-    pass
+    mycursor = get_db().cursor()
+    id_ticket = request.args.get('id', '')
+    tuple_delete = (id_ticket)
+    sql = '''
+    DELETE FROM ticket_incident WHERE id_ticket = %s;
+    '''
+    mycursor.execute(sql, tuple_delete)
+    get_db().commit()
+    message=u'une variété supprimée, id : ' + id_variete
+    flash(message, 'alert-warning')
+    return redirect('/variete/show')
 
 @app.route('/ticket/edit', methods=['GET'])
 def edit_ticket():
@@ -54,7 +75,22 @@ def edit_ticket():
 
 @app.route('/ticket/edit', methods=['POST'])
 def valid_edit_ticket():
-    pass
+    mycursor = get_db().cursor()
+    id = request.form.get('id', '')
+    description_incident = request.form.get('description', '')
+    date_incident = request.form.get('date', '')
+    statut_incident = request.form.get('statut', '')
+    tuple_update = (id, description_incident, date_incident, statut_incident)
+    sql = '''
+    UPDATE ticket_incident SET description_incident = %s, date_incident = %s, statut_incident = %s,
+    WHERE id_ticket = %s;'''
+    mycursor.execute(sql, tuple_update)
+    get_db().commit()
+    message = u'Ticket modifié, id : '+ id + ' | description : '+ description_incident + \
+              ' | date ticket : '+ date_incident + ' | statut : '+ statut_incident
+    flash(message, 'alert-success')
+    return redirect('/ticket/show')
+
 
 @app.route('/variete/show')
 def show_variete():
