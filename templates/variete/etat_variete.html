@@ -18,9 +18,9 @@
             <th>Prix total</th>
         </tr>
       {% if stock | length >= 1 %}
-        {% for ligne in stock %}
+        {% for ligne in stock  %}
         <tr>
-          <td>{{ labels }}</td>
+          <td>{{ labels[0] }}</td>
           <td>{{ ligne.stock }}</td>
           <td>{{ ligne.prix }}</td>
         </tr>
