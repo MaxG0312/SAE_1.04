@@ -35,21 +35,6 @@ def show_layout():
 def show_ticket():
     mycursor = get_db().cursor()
     sql = '''
-    SELECT ticket.id_ticket AS id,
-    ticket.description_incident AS description,
-    ticket.date_incident AS date,
-    ticket.statut_incident AS statut,
-    FROM ticket_incident
-    '''
-    mycursor.execute(sql)
-    ticket_incident = mycursor.fetchall()
-    print(ticket_incident)
-    return render_template('ticket/show_tickets.html', ticket=ticket_incident)
-
-@app.route('/ticket/show')
-def show_ticket():
-    mycursor = get_db().cursor()
-    sql = '''
     SELECT ticket_incident.id_ticket AS id,
     ticket_incident.description_incident AS description,
     ticket_incident.date_incident AS date,
@@ -285,23 +270,23 @@ def delete_collecte():
     flash(message, 'alert-warning')
     return redirect('/collecte/show')
 
-@app.route('/collecte/edit', methods=['GET'])
-def edit_collecte():
-    id = request.args.get('id', '')
-    id=int(id)
-    return render_template('collecte/edit_collecte.html', collecte=collecte, parcelle=parcelle)
+# @app.route('/collecte/edit', methods=['GET'])
+# def edit_collecte():
+#     id = request.args.get('id', '')
+#     id=int(id)
+#     return render_template('collecte/edit_collecte.html', collecte=collecte, parcelle=parcelle)
 
-@app.route('/collecte/edit', methods=['POST'])
-def valid_edit_collecte():
-    id = request.form.get('id', '')
-    quantite = request.form.get('quantite', '')
-    produit = request.form.get('produit', '')
-    date = request.form.get('date', '')
-    parcelle_id = request.form.get('parcelle_id')
-    print(u'Une collecte modifiée, quantite : ', quantite, ' | produit : ', produit, ' | date : ', date, '| parcelle_id : ', parcelle_id)
-    message = u'Une collecte modifiée, quantite : '+ quantite+ ' | produit : '+ produit+ ' | date : '+ date+ '| parcelle_id : '+ parcelle_id
-    flash(message, 'alert-success')
-    return redirect('/collecte/show')
+# @app.route('/collecte/edit', methods=['POST'])
+# def valid_edit_collecte():
+#     id = request.form.get('id', '')
+#     quantite = request.form.get('quantite', '')
+#     produit = request.form.get('produit', '')
+#     date = request.form.get('date', '')
+#     parcelle_id = request.form.get('parcelle_id')
+#     print(u'Une collecte modifiée, quantite : ', quantite, ' | produit : ', produit, ' | date : ', date, '| parcelle_id : ', parcelle_id)
+#     message = u'Une collecte modifiée, quantite : '+ quantite+ ' | produit : '+ produit+ ' | date : '+ date+ '| parcelle_id : '+ parcelle_id
+#     flash(message, 'alert-success')
+#     return redirect('/collecte/show')
 
 
 
