@@ -165,7 +165,7 @@ def show_etat_variete():
     ORDER BY culture.id_culture;
     '''
     mycursor.execute(sql)
-    stock = mycursor.fetchone()
+    stock = mycursor.fetchall()
 
     sql ='''
     SELECT  culture.libelle_culture AS culture
