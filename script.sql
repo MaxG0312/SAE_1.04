@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS collecte, variete, culture, saison, parcelle, ticket_incident;
+DROP TABLE IF EXISTS collecte, variete, culture, saison, parcelle, ticket_incident, collecte;
 
 CREATE TABLE saison (
     saison VARCHAR(31),
@@ -32,10 +32,12 @@ CREATE TABLE parcelle (
 CREATE TABLE ticket_incident (
     id_ticket INT AUTO_INCREMENT,
     description_incident VARCHAR(255),
-    date_incident DATETIME,
+    date_incident DATE,
     statut_incident VARCHAR(31),
+    parcelle_concernee INT,
     PRIMARY KEY(id_ticket)
 );
+
 CREATE TABLE collecte(
    id_collecte INT AUTO_INCREMENT,
    quantite_collecte DOUBLE,
@@ -44,6 +46,7 @@ CREATE TABLE collecte(
    id_parcelle INT NOT NULL,
    PRIMARY KEY(id_collecte) ,
    FOREIGN KEY(id_parcelle) REFERENCES parcelle(id_parcelle)
+);
 
 INSERT INTO saison VALUES
    ('Printemps'),
@@ -66,12 +69,11 @@ INSERT INTO variete VALUES
     (4, 'Poires Williams', 'Ete', 3, 3.99, 5.8);
 
 INSERT INTO ticket_incident VALUES
-    (1, 'Incident 1', '2020-01-01 00:00:00', 'En cours'),
-    (2, 'Incident 2', '2020-01-02 00:00:00', 'En cours'),
-    (3, 'Incident 3', '2020-01-03 00:00:00', 'En cours'),
-    (4, 'Incident 4', '2020-01-04 00:00:00', 'En cours'),
-    (5, 'Incident 5', '2020-01-05 00:00:00', 'En cours'),
-    (6, 'Incident 6', '2020-01-06 00:00:00', 'En cours');
+    (1, 'Incendie', '2020-09-27', 'En cours', 1),
+    (2, 'Inondation', '2020-08-14', 'En cours', 2),
+    (3, 'Incendie', '2020-10-02', 'En cours', 3);
+    
+
 INSERT INTO parcelle VALUES 
     (1, 2.5, '1 rue de la Paix'),
     (2, 1.5, '2 rue de la Paix'),
@@ -79,7 +81,7 @@ INSERT INTO parcelle VALUES
 
 INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27 18:21:00',1),
 (2, 17.5, 'Tomates', '2020-08-14 13:23:00',1),
-(3, 45.5, 'Pommes', '2020-10-02 15:38:00',2);
+(3, 45.5, 'Pommes', '2020-10-02 15:38:00',2),
     (4, 4.5, '4 rue de la Paix'),
     (5, 5.5, '5 rue de la Paix'),
     (6, 6.5, '6 rue de la Paix');

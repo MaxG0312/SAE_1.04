@@ -5,16 +5,16 @@ import pymysql.cursors
 # (interface de serveur web python)
 # comportements et méthodes d'un serveur web
 app = Flask(__name__)    # instance de classe Flask (en paramètre le nom du module)
-app.secret_key = ''
+app.secret_key = 'secreeet'
 
 def get_db():
     #mysql --user=jgenitri --password=1511 --host=serveurmysql --database=BDD_jgenitri
     if 'db' not in g:
         g.db = pymysql.connect(
-            host="serveurmysql",                 # à modifier
-            user="jgenitri",                     # à modifier
-            password="1511",                # à modifier
-            database="BDD_jgenitri",        # à modifier
+            host="localhost",                 # à modifier
+            user="jbfroehl",                     # à modifier
+            password="motdepassehehe",                # à modifier
+            database="BDD_jbfroehl",        # à modifier
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -38,11 +38,14 @@ def show_ticket():
     SELECT ticket_incident.id_ticket AS id,
     ticket_incident.description_incident AS description,
     ticket_incident.date_incident AS date,
-    ticket_incident.statut_incident AS statut FROM ticket_incident;
+    ticket_incident.statut_incident AS statut,
+    ticket_incident.parcelle_concernee AS parcelle,
+    parcelle.adresse AS adresse FROM ticket_incident LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_concernee;
     '''
     mycursor.execute(sql)
     ticket_incident = mycursor.fetchall()
     print(ticket_incident)
+
     return render_template('tickets/show_ticket.html', ticket_incident=ticket_incident)
 
 @app.route('/ticket/add', methods=['GET'])
@@ -69,7 +72,6 @@ def valid_add_ticket():
     statut_incident = request.form.get('statut', '')
     parcelle_concernee = request.form.get('parcelle', '')
     tuple_insert = (description_ticket, date, statut_incident, parcelle_concernee)
-
     sql = '''
     INSERT INTO ticket_incident(description_incident, date_incident, statut_incident, parcelle_concernee)
     VALUES (%s, %s, %s, %s);
@@ -80,7 +82,8 @@ def valid_add_ticket():
     message = u'Nouveau ticket , description : '+description_ticket + ' | date : ' + date + \
                 ' | statut : ' + statut_incident+ '| parcelle_concernee : '+ parcelle_concernee
     flash(message, 'alert-success')
-    return redirect('ticket/show')
+
+    return redirect('/ticket/show')
 
 @app.route('/ticket/delete', methods=['GET'])
 def delete_ticket():
@@ -92,9 +95,9 @@ def delete_ticket():
     '''
     mycursor.execute(sql, tuple_delete)
     get_db().commit()
-    message=u'une variété supprimée, id : ' + id_ticket
+    message=u'Un ticket supprimé ! id : ' + id_ticket
     flash(message, 'alert-warning')
-    return redirect('/variete/show')
+    return redirect('/ticket/show')
 
 @app.route('/ticket/edit', methods=['GET'])
 def edit_ticket():
