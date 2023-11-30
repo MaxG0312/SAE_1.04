@@ -20,7 +20,7 @@
       {% if stock | length >= 1 %}
         {% for ligne in stock  %}
         <tr>
-          <td></td>
+          <td>{{ ligne.nom }}</td>
           <td>{{ ligne.stock }}</td>
           <td>{{ ligne.prix }}</td>
         </tr>
