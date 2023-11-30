@@ -35,18 +35,19 @@ INSERT INTO saison VALUES
    ('Printemps'),
    ('Ete'),
    ('Automne'),
-   ('Hiver');
+   ('Hiver'),
+   ('Toutes');
 
 INSERT INTO culture VALUES
     (1, 'Tomates'),
-    (2, 'Pommes'),
-    (3, 'Poires'),
-    (4, 'Maïs'),
-    (5, 'Blé'),
-    (6, 'Carottes');
+    (NULL, 'Pommes'),
+    (NULL, 'Poires'),
+    (NULL, 'Maïs'),
+    (NULL, 'Blé'),
+    (NULL, 'Carottes');
 
 INSERT INTO variete VALUES
     (1, 'Carottes de Nantes', 'Ete', 6, 1.5, 74.5),
-    (2, 'Tomates cerises', 'Ete', 1, 5.67, 52.0),
-    (3, 'Pommes Gala', 'Hiver', 2, 1.95, 0),
-    (4, 'Poires Williams', 'Ete', 3, 3.99, 5.8);
+    (NULL, 'Tomates cerises', 'Ete', 1, 5.67, 52.0),
+    (NULL, 'Pommes Gala', 'Hiver', 2, 1.95, 0),
+    (NULL, 'Poires Williams', 'Ete', 3, 3.99, 5.8);
