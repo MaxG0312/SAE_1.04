@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS variete, culture, saison;
+DROP TABLE IF EXISTS variete, culture, saison, ticket_incident;
 
 CREATE TABLE saison (
     saison VARCHAR(31),
@@ -21,6 +21,14 @@ CREATE TABLE variete (
     PRIMARY KEY(id_variete),
     FOREIGN KEY(saison) REFERENCES saison(saison),
     FOREIGN KEY(culture) REFERENCES culture(id_culture)
+);
+
+CREATE TABLE ticket_incident (
+    id_ticket INT AUTO_INCREMENT,
+    description VARCHAR(255),
+    date_ticket DATETIME,
+    statut VARCHAR(31),
+    PRIMARY KEY(id_ticket)
 );
 
 INSERT INTO saison VALUES
