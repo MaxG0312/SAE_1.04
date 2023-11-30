@@ -46,13 +46,56 @@ def show_ticket():
     print(ticket_incident)
     return render_template('ticket/show_tickets.html', ticket=ticket_incident)
 
+@app.route('/ticket/show')
+def show_ticket():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT ticket_incident.id_ticket AS id,
+    ticket_incident.description_incident AS description,
+    ticket_incident.date_incident AS date,
+    ticket_incident.statut_incident AS statut FROM ticket_incident;
+    '''
+    mycursor.execute(sql)
+    ticket_incident = mycursor.fetchall()
+    print(ticket_incident)
+    return render_template('tickets/show_ticket.html', ticket_incident=ticket_incident)
+
 @app.route('/ticket/add', methods=['GET'])
 def add_ticket():
-    pass
+    mycursor = get_db().cursor()
+    sql='''
+    SELECT ticket_incident.id_ticket AS id FROM ticket_incident;
+    '''
+    mycursor.execute(sql)
+    ticket = mycursor.fetchall()
+    sql = '''
+    SELECT parcelle.id_parcelle AS id, parcelle.adresse AS adresse FROM parcelle;
+    '''
+    mycursor.execute(sql)
+    parcelle = mycursor.fetchall()
+    return render_template('tickets/add_ticket.html', ticket=ticket, parcelle=parcelle)
 
 @app.route('/ticket/add', methods=['POST'])
 def valid_add_ticket():
-    pass
+    mycursor = get_db().cursor()
+
+    description_ticket = request.form.get('description_ticket', '')
+    date = request.form.get('date', '')
+    statut_incident = request.form.get('statut', '')
+    parcelle_concernee = request.form.get('parcelle', '')
+    tuple_insert = (description_ticket, date, statut_incident, parcelle_concernee)
+
+    sql = '''
+    INSERT INTO ticket_incident(description_incident, date_incident, statut_incident, parcelle_concernee)
+    VALUES (%s, %s, %s, %s);
+    '''
+    mycursor.execute(sql, tuple_insert)
+    get_db().commit()
+
+    message = u'Nouveau ticket , description : '+description_ticket + ' | date : ' + date + \
+                ' | statut : ' + statut_incident+ '| parcelle_concernee : '+ parcelle_concernee
+    flash(message, 'alert-success')
+    return redirect('ticket/show')
 
 @app.route('/ticket/delete', methods=['GET'])
 def delete_ticket():
@@ -89,7 +132,6 @@ def valid_edit_ticket():
               ' | date ticket : '+ date_incident + ' | statut : '+ statut_incident
     flash(message, 'alert-success')
     return redirect('/ticket/show')
-
 
 @app.route('/variete/show')
 def show_variete():
