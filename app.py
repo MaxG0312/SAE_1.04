@@ -196,7 +196,7 @@ def valid_add_variete():
 
     sql = '''
     INSERT INTO variete(libelle_variete, saison, culture, prix_kg, stock)
-    VALUES (%s, %s, %s, %s, %s);
+    VALUES (%s, %s, %s, %s);
     '''
     mycursor.execute(sql, tuple_insert)
     get_db().commit()
