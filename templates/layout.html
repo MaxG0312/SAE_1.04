@@ -7,18 +7,10 @@
         <title>Mon Potager</title>
     {% endblock %}
     {% block stylesheets %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/img/logo_carotte.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='/bootstrap/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% endblock %}
-    <style>
-        a {
-            text-decoration: none;
-        }
-
-        a:hover:not(nav a) {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
 {% include('_nav.html') %}
@@ -34,11 +26,12 @@
 {% endwith %}
 
 {% block body %}
-    <h2>Home</h2>
-    <p>Allez plutôt voir du côté de <a href="/collecte/show"> ici pour nos collecte</a> ou encore <a href="/adherent/show"> la pour nos adhérents</a>... </p>
+    <h2>Association Mon Potager</h2>
+    <p>Y'a rien içi pour l'instant...</p>
 {% endblock %}
 {% block javascripts %}
-    {#<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>#}
+
+    {#<script src="{{ url_for('static', filename='/bootstrap/js/bootstrap.js') }}"></script>#}
 {% endblock %}
 </body>
 </html>
