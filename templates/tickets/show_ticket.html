@@ -16,18 +16,16 @@
       <thead>
         <tr>
           <th>Id</th>
-          <th>Variété</th>
-          <th>Saison</th>
-          <th>Culture</th>
-            <th>Prix kg</th>
-            <th>En stock</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Statut</th>
           <th>Editer</th>
           <th>Supprimer</th>
         </tr>
       </thead>
       <tbody>
-        {% if ticket | length >= 1 %}
-        {% for ligne in ticket %}
+        {% if ticket_incident | length >= 1 %}
+        {% for ligne in ticket_incident %}
         <tr>
           <td>{{ ligne.id }}</td>
           <td>{{ ligne.description }}</td>
