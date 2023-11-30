@@ -1,30 +1,35 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-<title>Nouveau ticket</title>
+<title>Créer ticket</title>
 {% endblock %}
 
 {% block body %}
-<h2>Création d'un nouveau ticket</h2>
+<h2>Créer un nouveau ticket</h2>
 {% if error %}
 <p class=error><strong>Error:</strong> {{ error }}
     {% endif %}
 <form method="post" action="/ticket/add">
     <fieldset>
         <legend>Nouveau ticket</legend>
-        <label for="description">Quantité</label><br>
-        <input id="description" type="text" name="description" value="" placeholder="Saisir le motif du ticket" required><br>
+        <label for="description_ticket">Nom de variété</label><br>
+        <input id="description_ticket" type="text" name="description_ticket" value="" placeholder="Saisir une description" required><br>
         <label for="date">Date de constatation de l'incident</label><br>
-        <input id="date" type="date" name="date" value="" placeholder="Saisir une date" required><br>
+        <input name="date" type="date" id="date" value="" placeholder="Saisir la date" required><br>
+        <label for="statut">Statut</label><br>
+        <select name="statut" id="statut" required>
+            <option value="">Sélectionner un statut</option>
+            <option value="a-traiter"> A traiter</option>
+            <option value="en-cours"> En cours </option>
+            <option value="résolu"> Résolu </option>
+        </select><br>
         <br>
-        <label for="statut">Statut de l'incident</label><br>
-        <select name="statut_incident" id="statut_incident" required>
-            <option value="">Saisir une valeur</option>
-            <option value="a Traiter">A traiter</option>
-            <option value="En cours">En cours</option>
-            <option value="Résolu">Résolu</option>
-        </select>
-        <br>
+        <label for="parcelle">Parcelle concernée</label>
+        <select name="parcelle" id="parcelle" required>
+            <option value="">Sélectionner une parcelle</option>
+            {% for ligne in parcelle %}
+            <option value="{{ ligne.id }}">Parcelle {{ ligne.id }} : {{ ligne.adresse }}</option>
+            {% endfor %}
         <input type="submit" value="Creer" name="Valider" id="modifier">
         <br>
     </fieldset>
