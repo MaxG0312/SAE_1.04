@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Nouveau ticket</title>
+{% endblock %}
+
+{% block body %}
+<h2>Création d'un nouveau ticket</h2>
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+<form method="post" action="/ticket/add">
+    <fieldset>
+        <legend>Nouveau ticket</legend>
+        <label for="description">Quantité</label><br>
+        <input id="description" type="text" name="description" value="" placeholder="Saisir le motif du ticket" required><br>
+        <label for="date">Date de constatation de l'incident</label><br>
+        <input id="date" type="date" name="date" value="" placeholder="Saisir une date" required><br>
+        <br>
+        <label for="statut">Statut de l'incident</label><br>
+        <select name="statut_incident" id="statut_incident" required>
+            <option value="">Saisir une valeur</option>
+            <option value="a Traiter">A traiter</option>
+            <option value="En cours">En cours</option>
+            <option value="Résolu">Résolu</option>
+        </select>
+        <br>
+        <input type="submit" value="Creer" name="Valider" id="modifier">
+        <br>
+    </fieldset>
+</form>
+{% endblock %}

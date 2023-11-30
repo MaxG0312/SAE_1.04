@@ -27,7 +27,6 @@ def teardown_db(exception):
     if db is not None:
         db.close()
 
-
 @app.route('/')
 def show_layout():
     return render_template('layout.html')
@@ -45,7 +44,7 @@ def show_ticket():
     mycursor.execute(sql)
     ticket_incident = mycursor.fetchall()
     print(ticket_incident)
-    return render_template('ticket/show_tickets.html', ticket_incident=ticket_incident)
+    return render_template('ticket/show_tickets.html', ticket=ticket_incident)
 
 @app.route('/ticket/add', methods=['GET'])
 def add_ticket():
@@ -65,7 +64,7 @@ def delete_ticket():
     '''
     mycursor.execute(sql, tuple_delete)
     get_db().commit()
-    message=u'une variété supprimée, id : ' + id_variete
+    message=u'une variété supprimée, id : ' + id_ticket
     flash(message, 'alert-warning')
     return redirect('/variete/show')
 
