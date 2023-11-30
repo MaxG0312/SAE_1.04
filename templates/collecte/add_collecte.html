@@ -22,7 +22,7 @@
         <label for="parcelle_id">Parcelle</label><br>
         <select name="parcelle_id" id="parcelle_id" required>
             <option value="">Saisir une valeur</option>
-            {% for values in parcelle %}
+            {% for values in parcelles %}
                 <option value="{{ values.id }}">{{ values.adresse }}</option>
             {% endfor %}
         </select>

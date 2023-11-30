@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS variete, culture, saison, parcelle, ticket_incident;
+DROP TABLE IF EXISTS collecte, variete, culture, saison, parcelle, ticket_incident;
 
 CREATE TABLE saison (
     saison VARCHAR(31),
@@ -36,7 +36,14 @@ CREATE TABLE ticket_incident (
     statut_incident VARCHAR(31),
     PRIMARY KEY(id_ticket)
 );
-
+CREATE TABLE collecte(
+   id_collecte INT AUTO_INCREMENT,
+   quantite_collecte DOUBLE,
+   produit_collecte VARCHAR(50),
+   date_collecte DATETIME,
+   id_parcelle INT NOT NULL,
+   PRIMARY KEY(id_collecte) ,
+   FOREIGN KEY(id_parcelle) REFERENCES parcelle(id_parcelle)
 
 INSERT INTO saison VALUES
    ('Printemps'),
@@ -68,7 +75,11 @@ INSERT INTO ticket_incident VALUES
 INSERT INTO parcelle VALUES 
     (1, 2.5, '1 rue de la Paix'),
     (2, 1.5, '2 rue de la Paix'),
-    (3, 3.5, '3 rue de la Paix'),
+    (3, 3.5, '3 rue de la Paix');
+
+INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27 18:21:00',1),
+(2, 17.5, 'Tomates', '2020-08-14 13:23:00',1),
+(3, 45.5, 'Pommes', '2020-10-02 15:38:00',2);
     (4, 4.5, '4 rue de la Paix'),
     (5, 5.5, '5 rue de la Paix'),
     (6, 6.5, '6 rue de la Paix');

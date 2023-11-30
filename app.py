@@ -137,6 +137,36 @@ def show_variete():
     return render_template('variete/show_variete.html', variete=variete)
 
 
+@app.route('/variete/etat_show')
+def show_etat_variete():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT 
+    SUM(variete.stock) AS stock,
+    SUM(variete.prix_kg*variete.stock) AS prix
+    FROM variete
+    LEFT JOIN culture ON variete.culture = culture.id_culture
+    GROUP BY culture.id_culture
+    ORDER BY culture.id_culture;
+    '''
+    mycursor.execute(sql)
+    stock = mycursor.fetchall()
+
+    sql ='''
+    SELECT  culture.libelle_culture AS culture
+    FROM culture
+    LEFT JOIN variete ON culture.id_culture = variete.culture
+    GROUP BY culture.id_culture
+    ORDER BY culture.id_culture;
+    '''
+    mycursor.execute(sql)
+    variete = mycursor.fetchall()
+
+    labels = [str(row['culture']) for row in variete]
+    return render_template('variete/etat_variete.html', stock=stock, variete=variete,
+                           labels=labels)
+
+
 @app.route('/variete/add', methods=['GET'])
 def add_variete():
     mycursor = get_db().cursor()
