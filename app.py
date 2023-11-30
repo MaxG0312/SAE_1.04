@@ -136,12 +136,12 @@ def show_variete():
     print(variete)
     return render_template('variete/show_variete.html', variete=variete)
 
-
 @app.route('/variete/etat_show')
 def show_etat_variete():
     mycursor = get_db().cursor()
     sql = '''
     SELECT 
+    culture.libelle_culture AS nom,
     SUM(variete.stock) AS stock,
     SUM(variete.prix_kg*variete.stock) AS prix
     FROM variete
