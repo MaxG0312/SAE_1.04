@@ -101,23 +101,46 @@ def delete_ticket():
 
 @app.route('/ticket/edit', methods=['GET'])
 def edit_ticket():
-    pass
+    mycursor = get_db().cursor()
+
+    id = request.args.get('id', '')
+    sql = '''
+        SELECT ticket_incident.id_ticket AS id,
+        ticket_incident.description_incident AS description,
+        ticket_incident.date_incident AS date,
+        ticket_incident.statut_incident AS statut,
+        ticket_incident.parcelle_concernee AS parcelle FROM ticket_incident WHERE ticket_incident.id_ticket=%s;
+        '''
+    mycursor.execute(sql, (id))
+
+    ticket = mycursor.fetchone()
+    sql = '''
+        SELECT parcelle.id_parcelle AS id, parcelle.adresse AS adresse FROM parcelle;
+        '''
+    mycursor.execute(sql)
+    parcelle = mycursor.fetchall()
+    
+    return render_template('tickets/edit_ticket.html', ticket=ticket, parcelle=parcelle)
 
 @app.route('/ticket/edit', methods=['POST'])
 def valid_edit_ticket():
     mycursor = get_db().cursor()
     id = request.form.get('id', '')
-    description_incident = request.form.get('description', '')
-    date_incident = request.form.get('date', '')
-    statut_incident = request.form.get('statut', '')
-    tuple_update = (id, description_incident, date_incident, statut_incident)
+    description = request.form.get('description', '')
+    date_incident = request.form.get('date_incident', '')
+    statut = request.form.get('statut', '')
+    parcelle = request.form.get('parcelle_id', '')
+    parcelle_adresse = request.form.get('parcelle_adresse', '')
+    tuple_update = (description, date_incident, statut, parcelle, id)
     sql = '''
     UPDATE ticket_incident SET description_incident = %s, date_incident = %s, statut_incident = %s,
-    WHERE id_ticket = %s;'''
+        parcelle_concernee = %s WHERE id_ticket = %s;'''
     mycursor.execute(sql, tuple_update)
     get_db().commit()
-    message = u'Ticket modifié, id : '+ id + ' | description : '+ description_incident + \
-              ' | date ticket : '+ date_incident + ' | statut : '+ statut_incident
+
+    message = u'Un ticket modifié, id : '+ id + ' | description : '+ description + \
+                ' | date : '+ date_incident + ' | statut : '+ statut + \
+                ' | parcelle_concernee : ' + parcelle
     flash(message, 'alert-success')
     return redirect('/ticket/show')
 

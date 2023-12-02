@@ -1,6 +1,6 @@
 body {
-  margin: 0;
-  padding: 0;
+  margin: 10px;
+  padding: 10px;
   font-family: 'Roboto', sans-serif;
   background: #fffffffa;
   color: #000;
@@ -147,5 +147,67 @@ tr:nth-child(even) {
 
 tr:hover {
     background: #ddd;
+}
+
+.current {
+    color: black!important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    background-color: green;
+}
+
+input {
+    padding: 10px;
+    border-radius: 40px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 16px;
+    font-weight: 300;
+    transition: all 0.2s ease-in-out;
+}
+
+input:hover {
+    border: 1px solid green;
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="submit"] {
+    background: green;
+    color: white!important;
+    font-weight: 600;
+    border: transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="submit"]:hover {
+    background: rgb(45, 167, 45);
+    color: #fff!important;
+    transition: all 0.2s ease-in-out;
+}
+
+select {
+    padding: 10px;
+    border-radius: 40px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 16px;
+    font-weight: 300;
+    transition: all 0.2s ease-in-out;
+}
+
+select:hover {
+    border: 1px solid green;
+    transition: all 0.2s ease-in-out;
+}
+
+select:focus {
+    border: 1px solid green;
+    transition: all 0.2s ease-in-out;
+}
+
+select option:hover {
+    border: 1px solid green;
+    transition: all 0.2s ease-in-out;
 }
 
