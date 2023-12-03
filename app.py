@@ -168,7 +168,33 @@ def show_all_ticket():
     mycursor.execute(sql)
     ticket_incident = mycursor.fetchall()
 
-    return render_template('tickets/show_all_tickets.html', ticket_counter=ticket_counter, ticket_incident=ticket_incident)
+    sql = '''
+    SELECT parcelle.id_parcelle AS id,
+    parcelle.adresse AS adresse,
+    COUNT(ticket_incident.id_ticket) AS nombre_ticket,
+    SUM(ticket_incident.statut_incident = 'En cours') AS nombre_ticket_en_cours,
+    SUM(ticket_incident.statut_incident = 'Résolu') AS nombre_ticket_resolu,
+    SUM(ticket_incident.statut_incident = 'A traiter') AS nombre_ticket_en_attente
+    FROM ticket_incident LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_concernee
+    GROUP BY ticket_incident.parcelle_concernee
+    ORDER BY ticket_incident.parcelle_concernee;
+    '''
+    mycursor.execute(sql)
+    ticket_parcelle = mycursor.fetchall()
+
+    max = 0
+    for row in ticket_parcelle:
+        if row['nombre_ticket'] > max:
+            max = row['nombre_ticket']
+            parcelle_max = row['id']
+
+    min = 10000000
+    for row in ticket_parcelle:
+        if row['nombre_ticket'] < min:
+            min = row['nombre_ticket']
+            parcelle_min = row['id'] 
+
+    return render_template('tickets/show_all_tickets.html', ticket_counter=ticket_counter, ticket_incident=ticket_incident, ticket_parcelle=ticket_parcelle, parcelle_max=parcelle_max, parcelle_min=parcelle_min)
 
 @app.route('/variete/show')
 def show_variete():

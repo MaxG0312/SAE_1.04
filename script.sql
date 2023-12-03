@@ -20,7 +20,7 @@ CREATE TABLE variete (
     stock DECIMAL(4,1),
     PRIMARY KEY(id_variete),
     FOREIGN KEY(saison) REFERENCES saison(saison),
-    FOREIGN KEY(culture) REFERENCES culture(id_culture)
+    FOREIGN KEY(culture) REFERENCES culture(id_cINSERTulture)
 );
 CREATE TABLE parcelle (
     id_parcelle INT AUTO_INCREMENT,
@@ -69,15 +69,6 @@ INSERT INTO variete VALUES
     (3, 'Pommes Gala', 'Hiver', 2, 1.95, 0),
     (4, 'Poires Williams', 'Ete', 3, 3.99, 5.8);
 
-INSERT INTO ticket_incident VALUES
-    (NULL, 'Incendie', '2020-09-27', 'En cours', 1),
-    (NULL, 'Inondation', '2020-09-27', 'En cours', 2),
-    (NULL, 'Incendie', '2020-09-27', 'En cours', 3),
-    (NULL, 'Inondation', '2020-09-27', 'En cours', 4),
-    (NULL, 'Incendie', '2020-09-27', 'En cours', 5),
-    (NULL, 'Inondation', '2020-09-27', 'En cours', 3);
-    
-
 INSERT INTO parcelle VALUES 
     (1, 23.5, '1 rue de la Paix'),
     (2, 17.5, '2 rue de la Paix'),
@@ -85,6 +76,15 @@ INSERT INTO parcelle VALUES
     (4, 4.5, '4 rue de la Paix'),
     (5, 5.5, '5 rue de la Paix'),
     (6, 6.5, '6 rue de la Paix');
+
+INSERT INTO ticket_incident VALUES
+    (NULL, 'Incendie', '2020-09-27', 'En cours', 1),
+    (NULL, 'Inondation', '2020-09-27', 'En cours', 2),
+    (NULL, 'Incendie', '2020-09-27', 'En cours', 3),
+    (NULL, 'Inondation', '2020-09-27', 'En cours', 4),
+    (NULL, 'Incendie', '2020-09-27', 'En cours', 5),
+    (NULL, 'Inondation', '2020-09-27', 'En cours', 6);
+    
 
 INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27 18:21:00',1),
 (2, 17.5, 'Tomates', '2020-08-14 13:23:00',1),
