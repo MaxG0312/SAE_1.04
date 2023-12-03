@@ -44,7 +44,6 @@ def show_ticket():
     '''
     mycursor.execute(sql)
     ticket_incident = mycursor.fetchall()
-    print(ticket_incident)
 
     return render_template('tickets/show_ticket.html', ticket_incident=ticket_incident)
 
@@ -143,6 +142,33 @@ def valid_edit_ticket():
                 ' | parcelle_concernee : ' + parcelle
     flash(message, 'alert-success')
     return redirect('/ticket/show')
+
+@app.route('/ticket/all')
+def show_all_ticket():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT COUNT(ticket_incident.id_ticket) AS nombre_ticket,
+    SUM(ticket_incident.statut_incident = 'En cours') AS nombre_ticket_en_cours,
+    SUM(ticket_incident.statut_incident = 'Résolu') AS nombre_ticket_resolu,
+    SUM(ticket_incident.statut_incident = 'A traiter') AS nombre_ticket_en_attente
+    FROM ticket_incident LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_concernee
+    ORDER BY ticket_incident.parcelle_concernee;
+    '''
+    mycursor.execute(sql)
+    ticket_counter = mycursor.fetchall()
+
+    sql = '''
+    SELECT ticket_incident.id_ticket AS id,
+    ticket_incident.description_incident AS description,
+    ticket_incident.date_incident AS date,
+    ticket_incident.statut_incident AS statut,
+    ticket_incident.parcelle_concernee AS parcelle,
+    parcelle.adresse AS adresse FROM ticket_incident LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_concernee;
+    '''
+    mycursor.execute(sql)
+    ticket_incident = mycursor.fetchall()
+
+    return render_template('tickets/show_all_tickets.html', ticket_counter=ticket_counter, ticket_incident=ticket_incident)
 
 @app.route('/variete/show')
 def show_variete():

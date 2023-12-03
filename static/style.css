@@ -211,3 +211,10 @@ select option:hover {
     transition: all 0.2s ease-in-out;
 }
 
+.title_tickets {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
