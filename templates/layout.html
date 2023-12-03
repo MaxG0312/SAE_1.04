@@ -27,7 +27,13 @@
 
 {% block body %}
     <h2>Association Mon Potager</h2>
-    <p>Y'a rien içi pour l'instant...</p>
+    <p>Bievenue sur la page d'accueil de l'interface web de gestion de la base de données de l'association <span style="text-decoration: underline;"><span style="color: green;">Mon</span>Potager</span></p>
+
+    <!-- L'image de carotte mise en icone centrée  -->
+    <div class="text-center">
+        <img src="{{ url_for('static', filename='/img/logo_carotte.png') }}" alt="logo carotte" class="img-fluid">
+    </div>
+
 {% endblock %}
 {% block javascripts %}
 
