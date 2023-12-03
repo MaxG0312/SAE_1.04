@@ -144,7 +144,7 @@ def valid_edit_ticket():
     return redirect('/ticket/show')
 
 @app.route('/ticket/all')
-def show_all_ticket():
+def show_all_ticket_etat():
     mycursor = get_db().cursor()
     sql = '''
     SELECT COUNT(ticket_incident.id_ticket) AS nombre_ticket,
