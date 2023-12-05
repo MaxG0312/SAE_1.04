@@ -19,7 +19,7 @@
         <label for="saison">saison</label><br>
         <select name="saison" id="saison" required>
         {% for saison in saison %}
-            <option value="{{ variete.saison }}"
+            <option value="{{ saison.saison }}"
             {%  if variete.saison is defined
                     and saison.saison == variete.saison %}
             selected
