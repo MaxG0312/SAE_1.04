@@ -43,7 +43,7 @@ CREATE TABLE collecte(
    id_collecte INT AUTO_INCREMENT,
    quantite_collecte DOUBLE,
    produit_collecte VARCHAR(50),
-   date_collecte DATETIME,
+   date_collecte DATE,
    id_parcelle INT NOT NULL,
    PRIMARY KEY(id_collecte) ,
    FOREIGN KEY(id_parcelle) REFERENCES parcelle(id_parcelle)
@@ -90,9 +90,12 @@ INSERT INTO ticket_incident VALUES
     (NULL, 'Geplusdidee', '2020-09-27', 'En cours', 6);
     
 
-INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27 18:21:00',1),
-(2, 17.5, 'Tomates', '2020-08-14 13:23:00',1),
-(3, 45.5, 'Pommes', '2020-10-02 15:38:00',2),
-    (4, 4.5, '4 rue de la Paix'),
-    (5, 5.5, '5 rue de la Paix'),
-    (6, 6.5, '6 rue de la Paix');
+INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27',1),
+    (2, 17.5, 'Tomates', '2020-08-14',1),
+    (3, 45.5, 'Pommes', '2020-10-02',2),
+    (4, 4.5, 'Poires', '2020-09-27',3),
+    (5, 5.5, 'Carottes', '2020-09-27',4),
+    (6, 6.5, 'Tomates', '2020-09-27',5),
+    (7, 4.5, 'Pommes', '2020-09-27',6),
+    (8, 0.10, 'Poires', '2020-09-27',7),
+    (9, 7.8, 'Carottes', '2020-09-27',8);

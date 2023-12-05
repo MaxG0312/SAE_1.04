@@ -347,10 +347,8 @@ def edit_variete():
     variete = mycursor.fetchone()
     return render_template('variete/edit_variete.html', variete=variete, culture=culture, saison=saison)
 
-
-
 @app.route('/variete/edit', methods=['POST'])
-def valid_edit_collecte():
+def valid_edit_variete():
     mycursor = get_db().cursor()
     id = request.form.get('id', '')
     nom = request.form.get('nom', '')
@@ -370,8 +368,6 @@ def valid_edit_collecte():
     flash(message, 'alert-success')
     return redirect('/variete/show')
 
-
-
 @app.route('/collecte/show')
 def show_collecte():
     mycursor = get_db().cursor()
@@ -380,7 +376,7 @@ def show_collecte():
     quantite_collecte AS quantite,
     produit_collecte AS produit,
     date_collecte AS date,
-    parcelle_id AS parcelle_id
+    id_parcelle AS parcelle_id
     FROM collecte;
     '''
     mycursor.execute(sql)
@@ -407,7 +403,7 @@ def valid_add_collecte():
     date = request.form.get('date', '')
     tuple_insert = (parcelle_id, quantite, produit, date)
     sql='''
-    INSERT INTO collecte(parcelle_id, quantite_collecte, produit_collecte, date_collecte)
+    INSERT INTO collecte(id_parcelle, quantite_collecte, produit_collecte, date_collecte)
     VALUES (%s, %s, %s, %s);
     '''
     mycursor.execute(sql, tuple_insert)
@@ -439,7 +435,7 @@ def edit_collecte():
     quantite_collecte AS quantite,
     produit_collecte AS produit,
     date_collecte AS date,
-    parcelle_id AS parcelle_id
+    id_parcelle AS parcelle_id
     FROM collecte
     WHERE id_collecte = %s;
     '''
@@ -465,53 +461,47 @@ def valid_edit_collecte():
     tuple_update = (parcelle_id, quantite, produit, date, id)
     sql='''
     UPDATE collecte
-    SET parcelle_id = %s, quantite_collecte = %s, produit_collecte = %s, date_collecte = %s
+    SET id_parcelle = %s, quantite_collecte = %s, produit_collecte = %s, date_collecte = %s
     WHERE id_collecte = %s;
     '''
     mycursor.execute(sql, tuple_update)
     get_db().commit()
     message = u'Une collecte modifiée, quantite : ' + quantite + ' | produit : ' + produit + ' | date : ' + date + '| parcelle_id : ' + parcelle_id
     flash(message, 'alert-success')
+
     return redirect('/collecte/show')
     
-@app.route('/collecte/all')
-def show_collecte_etat():
-    mycursor = get_db().cursor()
-    sql = '''
-    SELECT COUNT(collecte.quantite) AS nombre_quantité,
-    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.parcelle_id
-    ORDER BY collecte.id;
-    '''
-    mycursor.execute(sql)
-    collecte_counter = mycursor.fetchall()
+# @app.route('/collecte/all')
+# def show_collecte_etat():
+#     mycursor = get_db().cursor()
+#     sql = '''
+#     SELECT COUNT(collecte.quantite_collecte) AS nombre_quantité
+#     FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.id_parcelle ORDER BY collecte.id_parcelle;
+#     '''
+#     mycursor.execute(sql)
+#     collecte_counter = mycursor.fetchall()
 
-    sql = '''
-    SELECT collecte.id_collecte AS id,
-    collecte.quantite_collecte AS quantite,
-    collecte.produit_collecte AS produit,
-    collecte.date_collecte AS date,
-    collecte.parcelle_id AS parcelle_id,
-    parcelle.adresse AS adresse FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_id;
-    '''
-    mycursor.execute(sql)
-    collecte = mycursor.fetchall()
+#     sql = '''
+#     SELECT collecte.id_collecte AS id,
+#     collecte.quantite_collecte AS quantite,
+#     collecte.produit_collecte AS produit,
+#     collecte.date_collecte AS date,
+#     collecte.id_parcelle AS parcelle_id,
+#     parcelle.adresse AS adresse FROM collecte, parcelle;
+#     '''
+#     mycursor.execute(sql)
+#     collecte = mycursor.fetchall()
 
-    sql = '''
-    SELECT parcelle.id_parcelle AS id,
-    parcelle.adresse AS adresse,
-    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_id
-    GROUP BY collecte.parcelle_id
-    ORDER BY collecte.parcelle_id;
-    '''
-    mycursor.execute(sql)
-    collecte_parcelle = mycursor.fetchall()
+#     sql = '''
+#     SELECT parcelle.id_parcelle AS id,
+#     parcelle.adresse AS adresse FROM parcelle
+#     LEFT JOIN ticket_incident ON parcelle.id_parcelle = ticket_incident.parcelle_concernee
+#     GROUP BY parcelle.id_parcelle ORDER BY parcelle.id_parcelle;
+#     '''
+#     mycursor.execute(sql)
+#     collecte_parcelle = mycursor.fetchall()
 
-    return render_template('collecte/show_collecte_etat.html', collecte_counter=collecte_counter,
-                           collecte=collecte, collecte_parcelle=collecte_parcelle)
-
-
-
-
+#     return render_template('collecte/show_collecte_etat.html', collecte_counter=collecte_counter, collecte=collecte, collecte_parcelle=collecte_parcelle)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
