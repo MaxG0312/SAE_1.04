@@ -535,5 +535,217 @@ def show_collecte_etat():
 
     return render_template('/collecte/show_collecte_etat.html', collecte_sum=collecte_sum, collecte=collecte, collecte_parcelle=collecte_parcelle)
 
+@app.route('/interaction/show')
+def show_interaction():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT Interactions.id_interaction AS id, cat.libelle_cat_interaction, description_interaction, prix, date_interaction, Adherent.prenom, Adherent.nom
+    FROM
+        Interactions 
+        LEFT JOIN
+            Categorie_Interactions AS cat
+            ON Interactions.id_cat_interaction = cat.id_cat_interaction
+        LEFT JOIN
+            Adherent
+            ON Interactions.id_adherent = Adherent.id_adherent
+    ORDER BY Adherent.nom
+    '''
+    mycursor.execute(sql)
+    interaction = mycursor.fetchall()
+    print(interaction)
+    return render_template('interaction/show_interaction.html', interaction=interaction)
+
+@app.route('/interaction/etat_show')
+def show_etat_interaction():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT id_parcelle, COUNT(id_parcelle) AS total, FORMAT(100 * COUNT(id_parcelle) / (SELECT COUNT(*) FROM a_interagi_sur), 2) AS prop_par_parcelle
+    FROM
+        a_interagi_sur
+    GROUP BY id_parcelle
+    ;
+    '''
+    mycursor.execute(sql)
+    prop = mycursor.fetchall()
+
+
+    labels = [str(row['parcelle']) for row in prop]
+    return render_template('interaction/etat_interaction.html', prop=prop,
+                           labels=labels)
+
+
+@app.route('/interaction/add', methods=['GET'])
+def add_interaction():
+    mycursor = get_db().cursor()
+    sql='''
+    SELECT id_cat_interaction AS id_cat, libelle_cat_interaction AS descr
+    FROM
+        Categorie_interactions
+    ;
+    '''
+    mycursor.execute(sql)
+    cat = mycursor.fetchall()
+
+    sql = '''
+    SELECT id_adherent, prenom, nom
+    FROM
+        Adherent;
+    '''
+    mycursor.execute(sql)
+    adherent = mycursor.fetchall()
+
+    sql = '''
+        SELECT id_parcelle, adresse
+        FROM
+            Parcelle;
+        '''
+    mycursor.execute(sql)
+    parcelle = mycursor.fetchall()
+    return render_template('interaction/add_interaction.html', cat=cat, adherent=adherent, parcelle=parcelle)
+
+
+@app.route('/interaction/add', methods=['POST'])
+def valid_add_interaction():
+    mycursor = get_db().cursor()
+
+    description_interaction = request.form.get('description_interaction', '')
+    date_interaction = request.form.get('date_interaction', '')
+    prix = request.form.get('prix', '')
+    id_cat_interaction = request.form.get('id_cat_interaction', '')
+    id_adherent = request.form.get('id_adherent', '')
+    tuple_insert1 = (description_interaction, date_interaction, prix, id_cat_interaction, id_adherent)
+
+    sql = '''
+    INSERT INTO Interactions(description_interaction, date_interaction, prix, id_cat_interaction, id_adherent)
+    VALUES (%s, %s, %s, %s, %s);
+    '''
+    mycursor.execute(sql, tuple_insert1)
+    get_db().commit()
+
+    id = request.args.get('id', '')
+    sql = '''
+            SELECT id_interaction AS id
+            FROM 
+                Interactions
+            WHERE id = MAX(%s);
+            '''
+    mycursor.execute(sql, (id))
+    id_interaction = mycursor.fetchone()
+
+    id_parcelle = request.form.get('id_parcele', '')
+    tuple_insert2 = (id_parcelle, id_interaction)
+
+    sql = '''
+    INSERT INTO a_interagi_sur(id_parcelle, id_interaction)
+    VALUES (%s, %s)
+    '''
+    mycursor.execute(sql, tuple_insert2)
+    get_db().commit()
+
+    message = u'Nouvelle interaction , description : ' + description_interaction + ' | date : ' + date_interaction + \
+              ' | prix : ' + prix + '| catégorie : ' + id_cat_interaction + ' | adhérent : ' + id_adherent + ' | parcelle : ' + id_parcelle
+    flash(message, 'alert-success')
+    return redirect('/interaction/show')
+
+
+@app.route('/interaction/delete', methods=['GET'])
+def delete_interaction():
+    mycursor = get_db().cursor()
+    id_interaction = request.args.get('id', '')
+    tuple_delete = (id_interaction)
+    sql = '''
+    DELETE
+    FROM 
+        Interactions
+    WHERE
+        id_interaction = %s
+    ;
+    '''
+    mycursor.execute(sql, tuple_delete)
+    get_db().commit()
+    message=u'une interaction supprimée, id : ' + id_interaction
+    flash(message, 'alert-warning')
+    return redirect('/interaction/show')
+
+@app.route('/interaction/edit', methods=['GET'])
+def edit_interaction():
+    mycursor = get_db().cursor()
+    sql = '''
+        SELECT id_cat_interaction AS id_cat, libelle_cat_interaction AS descr
+        FROM
+            Categorie_interaction
+        ;
+        '''
+    mycursor.execute(sql)
+    cat = mycursor.fetchall()
+
+    sql = '''
+        SELECT id_adherent, prenom, nom
+        FROM
+            Adherent;
+        '''
+    mycursor.execute(sql)
+    adherent = mycursor.fetchall()
+
+    sql = '''
+            SELECT id_parcelle, adresse
+            FROM
+                Parcelle;
+            '''
+    mycursor.execute(sql)
+    parcelle = mycursor.fetchall()
+
+    id = request.args.get('id', '')
+    sql = '''
+        SELECT id_interaction AS id, description_interaction, date_interaction, prix, id_cat_interaction, id_adherent, a_interagi_sur.id_parcelle
+        FROM 
+            Interactions, a_interagi_sur
+        WHERE id_interaction=%s AND a_interagi_sur.id_interaction = id_interaction;
+        '''
+    mycursor.execute(sql, (id))
+    interaction = mycursor.fetchone()
+    return render_template('interaction/edit_interaction.html', interaction=interaction, cat=cat, adherent=adherent, parcelle=parcelle)
+
+
+
+@app.route('/interaction/edit', methods=['POST'])
+def valid_edit_interaction():
+    mycursor = get_db().cursor()
+
+    id = request.form.get('id', '')
+    description_interaction = request.form.get('description_interaction', '')
+    date_interaction = request.form.get('date_interaction', '')
+    prix = request.form.get('prix', '')
+    id_cat_interaction = request.form.get('id_cat_interaction', '')
+    id_adherent = request.form.get('id_adherent', '')
+    tuple_update1 = (description_interaction, date_interaction, prix, id_cat_interaction, id_adherent, id)
+
+    sql = '''
+    UPDATE Interactions SET description_interaction = %s, date_interaction = %s, prix = %s, id_cat_interaction = %s, id_adherent = %s
+    WHERE 
+        id_interaction = %s
+    ;
+    '''
+    mycursor.execute(sql, tuple_update1)
+    get_db().commit()
+
+    id_parcelle = request.form.get('id_parcelle', '')
+    tuple_update2 = (id_parcelle, id)
+
+    sql = '''
+        UPDATE a_interagi_sur SET id_parcelle = %s
+        WHERE 
+            id_interaction = %s
+        ;
+        '''
+    mycursor.execute(sql, tuple_update2)
+    get_db().commit()
+
+    message = u'Une interaction modifiée, id : ' + id + ' | description : ' + description_interaction + ' | date : ' + date_interaction + \
+              ' | prix : ' + prix + '| catégorie : ' + id_cat_interaction + ' | adhérent : ' + id_adherent + ' | parcelle : ' + id_parcelle
+    flash(message, 'alert-success')
+    return redirect('/interaction/show')
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS collecte, ticket_incident, variete, parcelle, culture, saison;
+DROP TABLE IF EXISTS a_interagi_sur, Interactions, Categorie_Interactions, Adherent, collecte, ticket_incident, parcelle, variete, culture, saison;
 
 CREATE TABLE saison (
     saison VARCHAR(31),
@@ -48,6 +48,41 @@ CREATE TABLE collecte(
    PRIMARY KEY(id_collecte) ,
    FOREIGN KEY(id_parcelle) REFERENCES parcelle(id_parcelle)
 );
+
+CREATE TABLE Adherent(
+    id_adherent INT AUTO_INCREMENT,
+    nom VARCHAR(255),
+    prenom VARCHAR(255),
+    adresse_adherent VARCHAR(255),
+    PRIMARY KEY(id_adherent)
+);
+
+CREATE TABLE Categorie_Interactions(
+    id_cat_interaction INT AUTO_INCREMENT,
+    libelle_cat_interaction VARCHAR(255),
+    PRIMARY KEY(id_cat_interaction)
+);
+
+CREATE TABLE Interactions(
+    id_interaction INT AUTO_INCREMENT,
+    description_interaction VARCHAR(255),
+    date_interaction DATETIME,
+    prix DECIMAL(10,2),
+    id_cat_interaction INT,
+    id_adherent INT,
+    PRIMARY KEY(id_interaction),
+    FOREIGN KEY(id_cat_interaction) REFERENCES Categorie_Interactions(id_cat_interaction),
+    FOREIGN KEY(id_adherent) REFERENCES Adherent(id_adherent)
+);
+
+CREATE TABLE a_interagi_sur(
+    id_parcelle INT,
+    id_interaction INT,
+    PRIMARY KEY(id_parcelle, id_interaction),
+    FOREIGN KEY(id_parcelle) REFERENCES parcelle(id_parcelle),
+    FOREIGN KEY(id_interaction) REFERENCES Interactions(id_interaction)
+);
+
 
 INSERT INTO saison VALUES
    ('Printemps'),
@@ -99,3 +134,30 @@ INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27',1),
     (7, 4.5, 'Pommes', '2020-09-27 03:02:01',6),
     (8, 0.10, 'Poires', '2020-09-27 07:07:07',7),
     (9, 7.8, 'Carottes', '2020-09-27 08:27:43',8);
+
+INSERT INTO Adherent VALUES
+    (NULL, 'Dupont', 'Jean', '1 rue de la Paix'),
+    (NULL, 'Dupont', 'Jean', '2 rue de la Guerre'),
+    (NULL, 'Dupont', 'Jean', '78 rue des Lilas'),
+    (NULL, 'Dupont', 'Jean', '243 rue du Lavoir'),
+    (NULL, 'Dupont', 'Jean', '80 rue des petites chevres'),
+    (NULL, 'Dupont', 'Jean', '6127 rue du R warwick'),
+    (NULL, 'Dupont', 'Jean', '69 avenue de Lyon'),
+    (NULL, 'Dupont', 'Jean', '5 rue du Piratier'),
+    (NULL, 'Dupont', 'Jean', '7 chemin du chinoa');
+
+INSERT INTO Categorie_Interactions VALUES
+    (NULL, 'Arrosgae'),
+    (NULL, 'Traitement'),
+    (NULL, 'Entretien');
+
+INSERT INTO Interactions VALUES
+    (NULL, 'Arrosage', '2020-09-27 12:00:00', 0.0, 1, 1),
+    (NULL, 'Traitement', '2020-09-27 12:00:00', 0.0, 2, 2),
+    (NULL, 'Entretien', '2020-09-27 12:00:00', 0.0, 3, 3),
+    (NULL, 'Arrosage', '2020-09-27 12:00:00', 0.0, 1, 4),
+    (NULL, 'Traitement', '2020-09-27 12:00:00', 0.0, 2, 5),
+    (NULL, 'Entretien', '2020-09-27 12:00:00', 0.0, 3, 6),
+    (NULL, 'Arrosage', '2020-09-27 12:00:00', 0.0, 1, 7),
+    (NULL, 'Traitement', '2020-09-27 12:00:00', 0.0, 2, 8),
+    (NULL, 'Entretien', '2020-09-27 12:00:00', 0.0, 3, 9);
