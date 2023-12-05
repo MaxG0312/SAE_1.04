@@ -608,14 +608,12 @@ def valid_add_interaction():
     mycursor.execute(sql, tuple_insert1)
     get_db().commit()
 
-    id = request.args.get('id', '')
     sql = '''
-            SELECT id_interaction AS id
+            SELECT MAX(id_interaction)
             FROM 
                 Interactions
-            WHERE id = MAX(%s);
             '''
-    mycursor.execute(sql, (id))
+    mycursor.execute(sql)
     id_interaction = mycursor.fetchone()
 
     id_parcelle = request.form.get('id_parcele', '')
