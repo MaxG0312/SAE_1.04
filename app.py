@@ -473,6 +473,43 @@ def valid_edit_collecte():
     message = u'Une collecte modifiée, quantite : ' + quantite + ' | produit : ' + produit + ' | date : ' + date + '| parcelle_id : ' + parcelle_id
     flash(message, 'alert-success')
     return redirect('/collecte/show')
+    
+@app.route('/collecte/all')
+def show_collecte_etat():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT COUNT(collecte.quantite) AS nombre_quantité,
+    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.parcelle_id
+    ORDER BY collecte.id;
+    '''
+    mycursor.execute(sql)
+    collecte_counter = mycursor.fetchall()
+
+    sql = '''
+    SELECT collecte.id_collecte AS id,
+    collecte.quantite_collecte AS quantite,
+    collecte.produit_collecte AS produit,
+    collecte.date_collecte AS date,
+    collecte.parcelle_id AS parcelle_id,
+    parcelle.adresse AS adresse FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_id;
+    '''
+    mycursor.execute(sql)
+    collecte = mycursor.fetchall()
+
+    sql = '''
+    SELECT parcelle.id_parcelle AS id,
+    parcelle.adresse AS adresse,
+    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_id
+    GROUP BY collecte.parcelle_id
+    ORDER BY collecte.parcelle_id;
+    '''
+    mycursor.execute(sql)
+    collecte_parcelle = mycursor.fetchall()
+
+    return render_template('collecte/show_collecte_etat.html', collecte_counter=collecte_counter,
+                           collecte=collecte, collecte_parcelle=collecte_parcelle)
+
+
 
 
 
