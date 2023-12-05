@@ -475,65 +475,51 @@ def valid_edit_collecte():
 def show_collecte_etat():
     mycursor = get_db().cursor()
     sql = '''
-    SELECT COUNT(collecte.id_collecte) AS nombre_collecte,
-    SUM(collecte.produit_collecte = 'Pommes') AS nombre_pomme,
-    SUM(collecte.produit_collecte = 'Poires') AS nombre_poire,
-    SUM(collecte.produit_collecte = 'Fraises') AS nombre_fraise,
-    SUM(collecte.produit_collecte = 'Tomates') AS nombre_tomate,
-    SUM(collecte.produit_collecte = 'Carottes') AS nombre_carotte,
-    SUM(collecte.produit_collecte = 'Salade') AS nombre_salade,
-    SUM(collecte.produit_collecte = 'Chou') AS nombre_chou,
-    SUM(collecte.produit_collecte = 'Aubergines') AS nombre_aubergine,
-    SUM(collecte.produit_collecte = 'Courgettes') AS nombre_courgette,
-    SUM(collecte.produit_collecte = 'Concombre') AS nombre_concombre,
-    SUM(collecte.produit_collecte = 'Patates') AS nombre_patate,
-    SUM(collecte.produit_collecte = 'Oignons') AS nombre_oignon,
-    SUM(collecte.produit_collecte = 'Radis') AS nombre_radis,
-    SUM(collecte.produit_collecte = 'Autre') AS nombre_autre
-    FROM collecte;
+    SELECT produit_collecte AS produit, SUM(quantite_collecte) AS quantite
+    FROM collecte
+    GROUP BY produit_collecte
+    ORDER BY produit_collecte;
     '''
+
     mycursor.execute(sql)
-    collecte_sum = mycursor.fetchall()
+    quantite = mycursor.fetchall()
 
     sql = '''
-    SELECT collecte.id_collecte AS id,
-    collecte.quantite_collecte AS quantite,
-    collecte.produit_collecte AS produit,
-    collecte.date_collecte AS date,
-    collecte.id_parcelle AS parcelle_id,
-    parcelle.adresse AS adresse
-    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.id_parcelle;
+    SELECT parcelle.id_parcelle AS id, parcelle.adresse AS adresse, produit_collecte AS produit, SUM(quantite_collecte) AS quantite
+    FROM collecte
+    LEFT JOIN parcelle ON collecte.id_parcelle = parcelle.id_parcelle
+    GROUP BY parcelle.id_parcelle, produit_collecte
+    ORDER BY parcelle.id_parcelle;
     '''
+
     mycursor.execute(sql)
-    collecte = mycursor.fetchall()
+    quantite_parcelle = mycursor.fetchall()
 
     sql = '''
-    SELECT parcelle.id_parcelle AS id,
-    parcelle.adresse AS adresse,
-    COUNT(collecte.id_collecte) AS nombre_collecte,
-    SUM(collecte.produit_collecte = 'Pomme') AS nombre_pomme,
-    SUM(collecte.produit_collecte = 'Poire') AS nombre_poire,
-    SUM(collecte.produit_collecte = 'Fraise') AS nombre_fraise,
-    SUM(collecte.produit_collecte = 'Tomate') AS nombre_tomate,
-    SUM(collecte.produit_collecte = 'Carotte') AS nombre_carotte,
-    SUM(collecte.produit_collecte = 'Salade') AS nombre_salade,
-    SUM(collecte.produit_collecte = 'Chou') AS nombre_chou,
-    SUM(collecte.produit_collecte = 'Aubergine') AS nombre_aubergine,
-    SUM(collecte.produit_collecte = 'Courgette') AS nombre_courgette,
-    SUM(collecte.produit_collecte = 'Concombre') AS nombre_concombre,
-    SUM(collecte.produit_collecte = 'Patate') AS nombre_patate,
-    SUM(collecte.produit_collecte = 'Oignon') AS nombre_oignon,
-    SUM(collecte.produit_collecte = 'Radis') AS nombre_radis,
-    SUM(collecte.produit_collecte = 'Autre') AS nombre_autre
-    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.id_parcelle
-    GROUP BY collecte.id_parcelle
-    ORDER BY collecte.id_parcelle;
+    SELECT parcelle.id_parcelle AS id, parcelle.adresse AS adresse, SUM(quantite_collecte) AS quantite
+    FROM collecte
+    LEFT JOIN parcelle ON collecte.id_parcelle = parcelle.id_parcelle
+    GROUP BY parcelle.id_parcelle
+    ORDER BY parcelle.id_parcelle;
     '''
 
     mycursor.execute(sql)
-    collecte_parcelle = mycursor.fetchall()
+    quantite_parcelle_total = mycursor.fetchall()
 
-    return render_template('/collecte/show_collecte_etat.html', collecte_sum=collecte_sum, collecte=collecte, collecte_parcelle=collecte_parcelle)
+    # Parcelle max et parcelle min
+    max = 0
+    for row in quantite_parcelle_total:
+        if row['quantite'] > max:
+            max = row['quantite']
+            parcelle_max = row['id']
+
+    min = 10000000
+    for row in quantite_parcelle_total:
+        if row['quantite'] < min:
+            min = row['quantite']
+            parcelle_min = row['id']
+
+    return render_template('collecte/show_collecte_etat.html', quantite=quantite, quantite_parcelle=quantite_parcelle, quantite_parcelle_total=quantite_parcelle_total, parcelle_max=parcelle_max, parcelle_min=parcelle_min)
 
 @app.route('/interaction/show')
 def show_interaction():
