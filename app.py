@@ -372,46 +372,107 @@ def valid_edit_collecte():
 
 
 
+@app.route('/collecte/show')
+def show_collecte():
+    mycursor = get_db().cursor()
+    sql='''   
+    SELECT id_collecte AS id,
+    quantite_collecte AS quantite,
+    produit_collecte AS produit,
+    date_collecte AS date,
+    parcelle_id AS parcelle_id
+    FROM collecte;
+    '''
+    mycursor.execute(sql)
+    collectes = mycursor.fetchall()
+    return render_template('collecte/show_collecte.html', collectes=collectes)
+
 @app.route('/collecte/add', methods=['GET'])
 def add_collecte():
-    return render_template('collecte/add_collecte.html', collecte=collecte, parcelle=parcelle)
+    mycursor = get_db().cursor()
+    sql='''
+    SELECT  id_parcelle AS id , adresse      
+    FROM parcelle;   
+    '''
+    mycursor.execute(sql)
+    parcelles = mycursor.fetchall()
+    return render_template('collecte/add_collecte.html', parcelles=parcelles)
 
 @app.route('/collecte/add', methods=['POST'])
 def valid_add_collecte():
+    mycursor = get_db().cursor()
     parcelle_id = request.form.get('parcelle_id', '')
     quantite = request.form.get('quantite', '')
     produit = request.form.get('produit', '')
     date = request.form.get('date', '')
-    print(u'Nouvelle collecte , quantite : ', quantite, ' | produit : ', produit, ' | date : ', date, '| parcelle_id : ' , parcelle_id)
-    message = u'Nouvelle collecte , quantite : '+quantite + ' | produit : ' + produit + ' | date : ' + date+ '| parcelle_id : '+ parcelle_id
+    tuple_insert = (parcelle_id, quantite, produit, date)
+    sql='''
+    INSERT INTO collecte(parcelle_id, quantite_collecte, produit_collecte, date_collecte)
+    VALUES (%s, %s, %s, %s);
+    '''
+    mycursor.execute(sql, tuple_insert)
+    get_db().commit()
+    message = u'Nouvelle collecte , quantite : '+quantite + ' | produit : ' + produit + ' | date : ' + date + '| parcelle_id : '+ parcelle_id
     flash(message, 'alert-success')
     return redirect('/collecte/show')
 
 @app.route('/collecte/delete', methods=['GET'])
 def delete_collecte():
+    mycursor = get_db().cursor()
     id = request.args.get('id', '')
-    print ("une collecte supprimée, id : ",id)
+    tuple_delete = (id)
+    sql = '''
+    DELETE FROM collecte WHERE id_collecte = %s;
+    '''
+    mycursor.execute(sql, tuple_delete)
+    get_db().commit()
     message=u'une collecte supprimée, id : ' + id
     flash(message, 'alert-warning')
     return redirect('/collecte/show')
 
-# @app.route('/collecte/edit', methods=['GET'])
-# def edit_collecte():
-#     id = request.args.get('id', '')
-#     id=int(id)
-#     return render_template('collecte/edit_collecte.html', collecte=collecte, parcelle=parcelle)
+@app.route('/collecte/edit', methods=['GET'])
+def edit_collecte():
+    mycursor = get_db().cursor()
+    id = request.args.get('id', '')
+    sql='''
+    SELECT id_collecte AS id,
+    quantite_collecte AS quantite,
+    produit_collecte AS produit,
+    date_collecte AS date,
+    parcelle_id AS parcelle_id
+    FROM collecte
+    WHERE id_collecte = %s;
+    '''
+    mycursor.execute(sql, id)
+    collectes = mycursor.fetchall()
 
-# @app.route('/collecte/edit', methods=['POST'])
-# def valid_edit_collecte():
-#     id = request.form.get('id', '')
-#     quantite = request.form.get('quantite', '')
-#     produit = request.form.get('produit', '')
-#     date = request.form.get('date', '')
-#     parcelle_id = request.form.get('parcelle_id')
-#     print(u'Une collecte modifiée, quantite : ', quantite, ' | produit : ', produit, ' | date : ', date, '| parcelle_id : ', parcelle_id)
-#     message = u'Une collecte modifiée, quantite : '+ quantite+ ' | produit : '+ produit+ ' | date : '+ date+ '| parcelle_id : '+ parcelle_id
-#     flash(message, 'alert-success')
-#     return redirect('/collecte/show')
+    parcelle_id = request.args.get('parcelle_id', '')
+    sql='''
+    SELECT id_parcelle AS id ,adresse FROM parcelle;
+    '''
+    mycursor.execute(sql)
+    parcelles = mycursor.fetchall()
+    return render_template('collecte/edit_collecte.html', collectes=collectes ,parcelles=parcelles)
+
+@app.route('/collecte/edit', methods=['POST'])
+def valid_edit_collecte():
+    mycursor = get_db().cursor()
+    id = request.form.get('id', '')
+    parcelle_id = request.form.get('parcelle_id', '')
+    quantite = request.form.get('quantite', '')
+    produit = request.form.get('produit', '')
+    date = request.form.get('date', '')
+    tuple_update = (parcelle_id, quantite, produit, date, id)
+    sql='''
+    UPDATE collecte
+    SET parcelle_id = %s, quantite_collecte = %s, produit_collecte = %s, date_collecte = %s
+    WHERE id_collecte = %s;
+    '''
+    mycursor.execute(sql, tuple_update)
+    get_db().commit()
+    message = u'Une collecte modifiée, quantite : ' + quantite + ' | produit : ' + produit + ' | date : ' + date + '| parcelle_id : ' + parcelle_id
+    flash(message, 'alert-success')
+    return redirect('/collecte/show')
 
 
 
