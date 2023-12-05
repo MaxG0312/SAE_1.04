@@ -8,7 +8,7 @@ flask --debug  --app app  run   --host 0.0.0.0
 ```
 
 Pour lancer sous linux 
-```bash
+```
 Si permissions d'exécution
 ./launcher.sh
 
