@@ -32,7 +32,7 @@
         <label for="culture">Type culture</label><br>
         <select name="culture" id="culture" required>
             {% for culture in culture %}
-                <option value="{{ variete.culture }}"
+                <option value="{{ culture.id_culture }}"
                 {%  if variete.culture is defined
                         and culture.id_culture == variete.culture %}
                 selected
