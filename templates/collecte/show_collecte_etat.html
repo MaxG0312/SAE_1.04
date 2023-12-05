@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Etat collecte</title>
+{% endblock %}
+
+{% block body %}
+
+<h3>Etat collecte</h3>
+<br><br>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Collecte</th>
+            <th>Collecte total</th>
+            <th>Collecte par parcelle</th>
+        </tr>
+      {% if collecte | length >= 1 %}
+        {% for ligne in collecte  %}
+        <tr>
+          <td>{{ ligne.id }}</td>
+          <td>{{ ligne.quantite }}</td>
+          <td>{{ ligne.produit }}</td>
+          <td>{{ ligne.date }}</td>
+          <td>{{ ligne.parcelle_id }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+</div>
+  {% endblock %}
