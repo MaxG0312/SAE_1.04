@@ -17,10 +17,10 @@ CREATE TABLE variete (
     saison VARCHAR(31),
     culture INT,
     prix_kg DECIMAL(4,2),
-    stock DECIMAL(4,1),
+    stock DECIMAL(4,2),
     PRIMARY KEY(id_variete),
     FOREIGN KEY(saison) REFERENCES saison(saison),
-    FOREIGN KEY(culture) REFERENCES culture(id_cINSERTulture)
+    FOREIGN KEY(culture) REFERENCES culture(id_culture)
 );
 CREATE TABLE parcelle (
     id_parcelle INT AUTO_INCREMENT,

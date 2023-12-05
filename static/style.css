@@ -215,3 +215,39 @@ h3 {
     text-align: center;
 }
 
+
+.table-chart h3 {
+    margin-bottom: 50px;
+}
+
+.table-chart table {
+    width:50%;
+    border-collapse: separate;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.table-chart th {
+    font-weight: 600;
+    padding: 10px;
+    text-align: center;
+}
+
+.table-chart td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+canvas {
+    position: relative;
+    max-width: 300px;
+    max-height: 300px;
+    left: 900px;
+    bottom : 350px;
+    /* A coté du de la table */
+    /* Bordure */
+    border-radius: 10px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    display: block;
+}

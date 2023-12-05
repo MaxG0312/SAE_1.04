@@ -194,7 +194,24 @@ def show_all_ticket_etat():
             min = row['nombre_ticket']
             parcelle_min = row['id'] 
 
-    return render_template('tickets/show_all_tickets.html', ticket_counter=ticket_counter, ticket_incident=ticket_incident, ticket_parcelle=ticket_parcelle, parcelle_max=parcelle_max, parcelle_min=parcelle_min)
+    sql = '''
+    SELECT parcelle.id_parcelle AS id,
+    parcelle.adresse AS adresse,
+    COUNT(ticket_incident.id_ticket) AS nombre_ticket
+    FROM ticket_incident LEFT JOIN parcelle ON parcelle.id_parcelle = ticket_incident.parcelle_concernee
+    GROUP BY ticket_incident.parcelle_concernee
+    ORDER BY ticket_incident.parcelle_concernee;
+    '''
+    mycursor.execute(sql)
+    ticket_moyenne = mycursor.fetchall()
+
+    labels = [str(row['adresse']) for row in ticket_moyenne]
+    values = [int(row['nombre_ticket']) for row in ticket_moyenne]
+    total = sum(values)
+    values = [int(row['nombre_ticket'])/total for row in ticket_moyenne]
+    values = [int(row*100) for row in values]
+
+    return render_template('tickets/show_all_tickets.html', ticket_counter=ticket_counter, ticket_incident=ticket_incident, ticket_parcelle=ticket_parcelle, parcelle_max=parcelle_max, parcelle_min=parcelle_min, labels=labels, values=values)
 
 @app.route('/variete/show')
 def show_variete():
