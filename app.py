@@ -471,37 +471,69 @@ def valid_edit_collecte():
 
     return redirect('/collecte/show')
     
-# @app.route('/collecte/all')
-# def show_collecte_etat():
-#     mycursor = get_db().cursor()
-#     sql = '''
-#     SELECT COUNT(collecte.quantite_collecte) AS nombre_quantité
-#     FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.id_parcelle ORDER BY collecte.id_parcelle;
-#     '''
-#     mycursor.execute(sql)
-#     collecte_counter = mycursor.fetchall()
+@app.route('/collecte/all')
+def show_collecte_etat():
+    mycursor = get_db().cursor()
+    sql = '''
+    SELECT COUNT(collecte.id_collecte) AS nombre_collecte,
+    SUM(collecte.produit_collecte = 'Pommes') AS nombre_pomme,
+    SUM(collecte.produit_collecte = 'Poires') AS nombre_poire,
+    SUM(collecte.produit_collecte = 'Fraises') AS nombre_fraise,
+    SUM(collecte.produit_collecte = 'Tomates') AS nombre_tomate,
+    SUM(collecte.produit_collecte = 'Carottes') AS nombre_carotte,
+    SUM(collecte.produit_collecte = 'Salade') AS nombre_salade,
+    SUM(collecte.produit_collecte = 'Chou') AS nombre_chou,
+    SUM(collecte.produit_collecte = 'Aubergines') AS nombre_aubergine,
+    SUM(collecte.produit_collecte = 'Courgettes') AS nombre_courgette,
+    SUM(collecte.produit_collecte = 'Concombre') AS nombre_concombre,
+    SUM(collecte.produit_collecte = 'Patates') AS nombre_patate,
+    SUM(collecte.produit_collecte = 'Oignons') AS nombre_oignon,
+    SUM(collecte.produit_collecte = 'Radis') AS nombre_radis,
+    SUM(collecte.produit_collecte = 'Autre') AS nombre_autre
+    FROM collecte;
+    '''
+    mycursor.execute(sql)
+    collecte_sum = mycursor.fetchall()
 
-#     sql = '''
-#     SELECT collecte.id_collecte AS id,
-#     collecte.quantite_collecte AS quantite,
-#     collecte.produit_collecte AS produit,
-#     collecte.date_collecte AS date,
-#     collecte.id_parcelle AS parcelle_id,
-#     parcelle.adresse AS adresse FROM collecte, parcelle;
-#     '''
-#     mycursor.execute(sql)
-#     collecte = mycursor.fetchall()
+    sql = '''
+    SELECT collecte.id_collecte AS id,
+    collecte.quantite_collecte AS quantite,
+    collecte.produit_collecte AS produit,
+    collecte.date_collecte AS date,
+    collecte.id_parcelle AS parcelle_id,
+    parcelle.adresse AS adresse
+    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.id_parcelle;
+    '''
+    mycursor.execute(sql)
+    collecte = mycursor.fetchall()
 
-#     sql = '''
-#     SELECT parcelle.id_parcelle AS id,
-#     parcelle.adresse AS adresse FROM parcelle
-#     LEFT JOIN ticket_incident ON parcelle.id_parcelle = ticket_incident.parcelle_concernee
-#     GROUP BY parcelle.id_parcelle ORDER BY parcelle.id_parcelle;
-#     '''
-#     mycursor.execute(sql)
-#     collecte_parcelle = mycursor.fetchall()
+    sql = '''
+    SELECT parcelle.id_parcelle AS id,
+    parcelle.adresse AS adresse,
+    COUNT(collecte.id_collecte) AS nombre_collecte,
+    SUM(collecte.produit_collecte = 'Pomme') AS nombre_pomme,
+    SUM(collecte.produit_collecte = 'Poire') AS nombre_poire,
+    SUM(collecte.produit_collecte = 'Fraise') AS nombre_fraise,
+    SUM(collecte.produit_collecte = 'Tomate') AS nombre_tomate,
+    SUM(collecte.produit_collecte = 'Carotte') AS nombre_carotte,
+    SUM(collecte.produit_collecte = 'Salade') AS nombre_salade,
+    SUM(collecte.produit_collecte = 'Chou') AS nombre_chou,
+    SUM(collecte.produit_collecte = 'Aubergine') AS nombre_aubergine,
+    SUM(collecte.produit_collecte = 'Courgette') AS nombre_courgette,
+    SUM(collecte.produit_collecte = 'Concombre') AS nombre_concombre,
+    SUM(collecte.produit_collecte = 'Patate') AS nombre_patate,
+    SUM(collecte.produit_collecte = 'Oignon') AS nombre_oignon,
+    SUM(collecte.produit_collecte = 'Radis') AS nombre_radis,
+    SUM(collecte.produit_collecte = 'Autre') AS nombre_autre
+    FROM collecte LEFT JOIN parcelle ON parcelle.id_parcelle = collecte.id_parcelle
+    GROUP BY collecte.id_parcelle
+    ORDER BY collecte.id_parcelle;
+    '''
 
-#     return render_template('collecte/show_collecte_etat.html', collecte_counter=collecte_counter, collecte=collecte, collecte_parcelle=collecte_parcelle)
+    mycursor.execute(sql)
+    collecte_parcelle = mycursor.fetchall()
+
+    return render_template('/collecte/show_collecte_etat.html', collecte_sum=collecte_sum, collecte=collecte, collecte_parcelle=collecte_parcelle)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

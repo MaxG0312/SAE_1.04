@@ -7,31 +7,94 @@
 {% block body %}
 
 <h3>Etat collecte</h3>
-<br><br>
-
-  <div class="table-responsive">
-    <table class="table table-striped table-sm">
+<br>
+<div class="table-responsive table-chart">
+  <h3>Statistiques collectes</h3>
+  <br>
+  <table>
+    <thead>
+      <tr>
+        <th style="color: black!important;">Fruit</th>
+        <th style="color: black!important;">Quantité</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if collecte | length >= 1 %}
+      {% for ligne in collecte_sum %}
+      <tr>
+        <td>Pomme</td>
+        <td>{{ ligne.nombre_pomme }} kg</td>
+      </tr>
+      <tr>
+        <td>Poire</td>
+        <td>{{ ligne.nombre_poire }} kg</td>
+      </tr>
+      <tr>
+        <td>Fraise</td>
+        <td>{{ ligne.nombre_fraise }} kg</td>
+      </tr>
+      <tr>
+        <td>Tomate</td>
+        <td>{{ ligne.nombre_tomate }} kg</td>
+      </tr>
+      <tr>
+        <td>Carotte</td>
+        <td>{{ ligne.nombre_carotte }} kg</td>
+      </tr>
+      <tr>
+        <td>Salade</td>
+        <td>{{ ligne.nombre_salade }} kg</td>
+      </tr>
+      <tr>
+        <td>Chou</td>
+        <td>{{ ligne.nombre_chou }} kg</td>
+      </tr>
+      <tr>
+        <td>Aubergine</td>
+        <td>{{ ligne.courgette }} kg</td>
+      </tr> 
+      <tr>
+        <td>Courgette</td>
+        <td>{{ ligne.nombre_aubergine }} kg</td>
+      </tr>
+      <tr>
+        <td>Concombre</td>
+        <td>{{ ligne.nombre_concombre }} kg</td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+      
+    </tbody>
+  </table>
+</div>
+  
+  <div class="table-responsive table-chart">
+    <table>
       <thead>
         <tr>
-          <th>Collecte</th>
-            <th>Collecte total</th>
-            <th>Collecte par parcelle</th>
-        </tr>
+        <th>Id</th>
+        <th>Quantité (kg)</th>
+        <th>Produit</th>
+        <th>Date</th>
+        <th>Collecté</th>
+        <th>Editer</th>
+        <th>Supprimer</th>
+      </tr>
+    </thead>
+    <tbody>
       {% if collecte | length >= 1 %}
-        {% for ligne in collecte  %}
-        <tr>
-          <td>{{ ligne.id }}</td>
-          <td>{{ ligne.quantite }}</td>
-          <td>{{ ligne.produit }}</td>
-          <td>{{ ligne.date }}</td>
-          <td>{{ ligne.parcelle_id }}</td>
-        </tr>
-        {% endfor %}
-        {% endif %}
-      </thead>
-      <tbody>
-
-      </tbody>
-    </table>
+      {% for ligne in collecte %}
+      <tr>
+        <td>{{ ligne.id }}</td>
+        <td>{{ ligne.quantite }}</td>
+        <td>{{ ligne.produit }}</td>
+        <td>{{ ligne.date }}</td>
+        <td>Sur la parcelle n°{{ ligne.parcelle_id }}</td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
 </div>
-  {% endblock %}
+
+{% endblock %}

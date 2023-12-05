@@ -18,7 +18,7 @@
         <label for="produit">Produit</label><br>
         <input id="produit" type="text" name="produit" value="{{ collectes[0]['produit'] }}" required><br>
         <label for="date">Date</label><br>
-        <input id="date" type="date" name="date" value="{{ collectes[0]['date'] }}"><br>
+        <input id="date" type="datetime" name="date" value="{{ collectes[0]['date'] }}" placeholder="année-mois-jour h:m:s"><br>
         <br>
         <label for="parcelle_id">Collecte effectuée sur la parcelle <span style="color: green;">{{ collectes[0]['parcelle_id'] }}</span> à l'adresse {{ parcelles[collectes[0]['parcelle_id']-1]['adresse'] }}</label><br>
         <select name="parcelle_id" id="parcelle_id" required>
