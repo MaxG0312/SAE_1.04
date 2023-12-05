@@ -74,19 +74,20 @@ INSERT INTO parcelle VALUES
     (NULL, 17.5, '2 rue de la Guerre'),
     (NULL, 45.5, '78 rue des Lilas'),
     (NULL, 4.5, '243 rue du Lavoir'),
-    (NULL, 5.5, '80 rue des petites chèvres'),
-    (NULL, 6.5, '6127 rue du replacement stratégique'),
+    (NULL, 5.5, '80 rue des petites chevres'),
+    (NULL, 6.5, '6127 rue du R warwick'),
     (NULL, 4.5, '69 avenue de Lyon'),
+    (NULL, 0.10, '5 rue du Piratier'),
     (NULL, 7.8, '7 chemin du chinoa');
 
 INSERT INTO ticket_incident VALUES
     (NULL, 'Incendie', '2020-09-27', 'En cours', 1),
     (NULL, 'Inondation', '2020-09-27', 'En cours', 2),
-    (NULL, 'Le pommier est tombé :(', '2020-09-27', 'En cours', 3),
+    (NULL, 'Le pommier est tombe :(', '2020-09-27', 'En cours', 3),
     (NULL, 'Squatteurs', '2020-09-27', 'En cours', 4),
     (NULL, 'Taupes', '2020-09-27', 'En cours', 5),
-    (NULL, 'Encore des taupes', '1998-03-24', 'Résolu', 2)
-    (NULL, 'Géplusdidée', '2020-09-27', 'En cours', 6);
+    (NULL, 'Encore des taupes', '1998-03-24', 'A traiter', 2),
+    (NULL, 'Geplusdidee', '2020-09-27', 'En cours', 6);
     
 
 INSERT INTO collecte VALUES (1, 23.5, 'Carottes', '2023-09-27 18:21:00',1),
